@@ -5,7 +5,7 @@ init:
 clean:
     rm -rf .build
 
-build:
+build: init
 	swift build
 
 test:
