@@ -3,11 +3,12 @@ import XCTest
 
 final class SwiftPlasmaTests: XCTestCase {
     func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-        SwiftPlasma.test()
+        let p = Protein(descrips: ["hello"], ingests: ["name": "world"])
+        let poolName = "test"
+        let options = PoolCreateOptions(size: 2048)
+        try! Pool.create(addr: poolName, options: options).get()
+        let pool = try! Pool.participate(addr: poolName).get()
+        let ok = pool.deposit(p)
+        XCTAssert(ok == Retort.Ok, "deposit failed")
     }
 }
