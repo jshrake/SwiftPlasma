@@ -28,20 +28,11 @@ let package = Package(
       name: "SwiftPlasma",
       dependencies: [
         .byName(name: "Plasma"), .byName(name: "Yaml", condition: .when(platforms: [.macOS])),
-      ],
-      swiftSettings: [
-        .unsafeFlags([
-          "-I./deps/c-plasma/build/install/macos/include"
-        ])
       ]
     ),
     .testTarget(
       name: "SwiftPlasmaTests",
-      dependencies: ["SwiftPlasma"],
-      swiftSettings: [
-        .unsafeFlags([
-          "-I./deps/c-plasma/build/install/macos/include"
-        ])
-      ]),
+      dependencies: ["SwiftPlasma"]
+    ),
   ]
 )
