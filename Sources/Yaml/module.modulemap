@@ -1,0 +1,5 @@
+module Yaml {
+    header "yaml.h"
+    link "yaml"
+    export *
+}
