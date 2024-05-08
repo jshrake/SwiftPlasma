@@ -14,8 +14,12 @@ let package = Package(
       ])
   ],
   targets: [
-    // Targets are the basic building blocks of a package, defining a module or a test suite.
-    // Targets can depend on other targets in this package and products from dependencies.
+    .target(
+      name: "SwiftPlasma",
+      dependencies: [
+        .byName(name: "Plasma"), .byName(name: "Yaml", condition: .when(platforms: [.macOS])),
+      ]
+    ),
     .binaryTarget(
       name: "Plasma",
       path: "./deps/c-plasma/build/install/xcframework/plasma.xcframework"
@@ -24,12 +28,6 @@ let package = Package(
       name: "Yaml",
       pkgConfig: "yaml-0.1",
       providers: [.apt(["libyaml"]), .brew(["libyaml"])]),
-    .target(
-      name: "SwiftPlasma",
-      dependencies: [
-        .byName(name: "Plasma"), .byName(name: "Yaml", condition: .when(platforms: [.macOS])),
-      ]
-    ),
     .testTarget(
       name: "SwiftPlasmaTests",
       dependencies: ["SwiftPlasma"]

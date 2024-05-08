@@ -8,6 +8,16 @@ public struct PoolCreateOptions {
 }
 
 public struct Pool {
+  public static func list(address: String) -> Result<[String], Retort> {
+    var slaw: slaw? = nil
+    let tort = pool_list_ex(address, &slaw)
+    if tort == Retort.ok.rawValue && slaw != nil {
+      let val: [String] = Slaw(slaw!).emit()!
+      return .success(val)
+    } else {
+      return .failure(Retort(tort))
+    }
+  }
   public static func create(name: String, options: PoolCreateOptions) -> Result<(), Retort> {
     tort {
       let slaw = Slaw(["size": options.size])
@@ -57,6 +67,28 @@ public class Hose {
     self.hose = hose
   }
 
+  /// The optional name of the hose, useful for debugging.
+  public var name: String? {
+    get {
+      let n = pool_get_hose_name(self.hose)
+      if let n = n {
+        return String(cString: n)
+      }
+      return nil
+    }
+    set {
+      pool_set_hose_name(self.hose, newValue)
+    }
+  }
+
+  public func poolName() -> String? {
+    let name = pool_name(self.hose)
+    if let name = name {
+      return String(cString: name)
+    }
+    return nil
+  }
+
   public func deposit(_ p: Protein) -> Retort {
     let ok = pool_deposit(hose, p.slaw, nil)
     return Retort(ok)
@@ -80,6 +112,7 @@ public class Hose {
     return idx
   }
 
+  /// Retrieve the protein at the current hose index.
   public func currentProtein() -> Result<Protein, Error> {
     var protein: protein? = nil
     var timestamp: pool_timestamp = 0
@@ -90,4 +123,17 @@ public class Hose {
       return .failure(Retort(ok))
     }
   }
+
+  /// Retrieve the nth protein from the pool.
+  public func nthProtein(idx: Int64) -> Result<Protein, Error> {
+    var protein: protein? = nil
+    var timestamp: pool_timestamp = 0
+    let ok = pool_nth_protein(hose, idx, &protein, &timestamp)
+    if ok == Retort.ok.rawValue {
+      return .success(Protein(protein: protein!, timestamp: timestamp))
+    } else {
+      return .failure(Retort(ok))
+    }
+  }
+
 }

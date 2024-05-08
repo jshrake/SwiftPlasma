@@ -156,8 +156,6 @@ public class BSlaw {
 
   public convenience init(_ x: Any) {
     switch x {
-    case let x as [Any]:
-      self.init(x)
     case let x as Int:
       self.init(x)
     case let x as UInt:
@@ -192,6 +190,8 @@ public class BSlaw {
       self.init(x)
     case let x as [String: Any]:
       self.init(x)
+    case let x as [Any]:
+      self.init(x)
     default:
       let m = Mirror(reflecting: x)
       fatalError("Cannot create slaw from Any with type \"\(m.subjectType)\"")
@@ -208,7 +208,7 @@ public class BSlaw {
       "ordered_maps": true,
     ])
     let tort = Retort(slaw_to_string_options(self.slaw, &slawString, options.slaw))
-    if tort.isOk {
+    if tort.isOk && slawString != nil {
       let b = slaw_string_emit(slawString)!
       let s = String(cString: b)
       return .success(s)
@@ -308,7 +308,11 @@ extension BSlaw {
       let a: [String: Any] = self.emitMap()!
       return a as? T
     default:
-      return self.emitAny()! as? T
+      if let v = self.emitAny() {
+        return v as? T
+      } else {
+        return nil
+      }
     }
   }
 
@@ -383,6 +387,10 @@ extension BSlaw {
 
   public func isProtein() -> Bool {
     slaw_is_protein(self.slaw)
+  }
+
+  public func isNil() -> Bool {
+    slaw_is_nil(self.slaw)
   }
 
   public func isList() -> Bool {

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+      {
+        "type": "lldb",
+        "request": "launch",
+        "name": "SwiftPlasmaTests",
+        "program": "/Applications/Xcode13.app/Contents/Developer/usr/bin/xctest",
+        "args": [".build/debug/SwiftPlasmaPackageTests.xctest"],
+        "cwd": "${workspaceFolder}",
+        "preLaunchTask": "swift: Build All"
+      }
+    ]
+  }
+  

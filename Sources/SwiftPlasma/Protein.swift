@@ -45,11 +45,11 @@ public struct Protein {
   }
 
   public func descrips() -> BSlaw {
-    BSlaw(protein_descrips(self.slaw))
+    BSlaw(protein_descrips(self.slaw)!)
   }
 
   public func ingests() -> BSlaw {
-    BSlaw(protein_ingests(self.slaw))
+    BSlaw(protein_ingests(self.slaw)!)
   }
 
   public func rude() -> [UInt8] {
@@ -61,6 +61,13 @@ public struct Protein {
     } else {
       return []
     }
+  }
+
+  public func asMap() -> [String: Any] {
+    return [
+      "descrips": self.descrips().emit()!,
+      "ingests": self.ingests().emit()!,
+    ]
   }
 
   public var slaw: slaw {
