@@ -3,7 +3,7 @@ import XCTest
 @testable import SwiftPlasma
 
 final class SwiftPlasmaTests: XCTestCase {
-  func testExample() throws {
+  func testParticipateDepositLocalPool() throws {
     let p = Protein(descrips: ["hello"], ingests: ["name": "world"])
     let poolName = "test"
     let options = PoolCreateOptions(size: 2048)
