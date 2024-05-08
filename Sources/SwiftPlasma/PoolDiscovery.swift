@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import Logging
+
+let log = Logger(label: "com.jshrake.SwiftPlasma.PoolDiscovery")
 
 public protocol PoolDiscoveryDelegate {
   func poolsDiscovered(pools: [String])
@@ -49,7 +52,7 @@ public class PoolDiscovery: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
   public func netServiceBrowser(
     _ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]
   ) {
-    print("Error browsing services: \(errorDict)")
+    log.error("Unexpected error browsing services: \(errorDict)")
   }
 
   public func netServiceBrowser(
@@ -59,30 +62,33 @@ public class PoolDiscovery: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
       services.remove(at: index)
       let poolNames = pools.remove(at: index)
       delegate?.poolsVanished(pools: poolNames)
-      print("Removed service: \(service.name)")
+      log.info("Removed service: \(service.name)")
+      log.info("Pools vanished: \(poolNames)")
     }
   }
 
   // MARK: - NetServiceDelegate methods
   public func netServiceDidResolveAddress(_ sender: NetService) {
+    log.info("Service resolved: \(sender.name)")
     guard let host = sender.hostName else {
-      return print("could not resolve host")
+      return log.error("Unexpevted error resolving host for \(sender.name)")
     }
     let port = sender.port
     let addr = "tcp://\(host):\(port)/"
     switch Pool.list(address: addr) {
     case .failure(let error):
-      return print("error listing pools at \(addr): \(error)")
+      return log.error("Unexpevted error listing pools at \(addr): \(error)")
     case .success(let poolNames):
       if let index = services.firstIndex(of: sender) {
         let resolvedNames = poolNames.map { "tcp://\(host):\(port)/\($0)" }
         pools.insert(resolvedNames, at: index)
         delegate?.poolsDiscovered(pools: resolvedNames)
+        log.info("Pools disxocered: \(resolvedNames)")
       }
     }
   }
 
   public func netService(_ sender: NetService, didNotResolve errorDict: [String: NSNumber]) {
-    print("Failed to resolve \(sender.name): \(errorDict)")
+    log.error("Failed to resolve \(sender.name): \(errorDict)")
   }
 }

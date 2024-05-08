@@ -13,11 +13,15 @@ let package = Package(
         "Plasma", "SwiftPlasma",
       ])
   ],
+  dependencies: [
+    .package(url: "https://github.com/apple/swift-log.git", from: "1.0.0")
+  ],
   targets: [
     .target(
       name: "SwiftPlasma",
       dependencies: [
         .byName(name: "Plasma"), .byName(name: "Yaml", condition: .when(platforms: [.macOS])),
+        .product(name: "Logging", package: "swift-log"),
       ]
     ),
     .binaryTarget(
@@ -30,7 +34,7 @@ let package = Package(
       providers: [.apt(["libyaml"]), .brew(["libyaml"])]),
     .testTarget(
       name: "SwiftPlasmaTests",
-      dependencies: ["SwiftPlasma"]
+      dependencies: ["SwiftPlasma", .product(name: "Logging", package: "swift-log")]
     ),
   ]
 )
