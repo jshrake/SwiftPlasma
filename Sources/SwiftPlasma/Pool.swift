@@ -31,12 +31,12 @@ public struct Pool {
     }
   }
 
-  public static func participate(name: String, options: PoolCreateOptions? = nil) -> Result<
+  public static func participate(name: String, create: PoolCreateOptions? = nil) -> Result<
     Hose, Retort
   > {
     var hose: pool_hose? = nil
     var tort: Retort
-    if let create = options {
+    if let create = create {
       let createSlaw = Protein(ingests: ["size": create.size])
       tort = Retort(
         pool_participate_creatingly(
