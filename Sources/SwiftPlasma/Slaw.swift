@@ -335,7 +335,7 @@ extension BSlaw {
       let ks = slaw_cons_emit_car(ns)!
       let vs = slaw_cons_emit_cdr(ns)!
       let k: String = BSlaw(ks).emit()!
-      let v: T = BSlaw(vs).emit()!
+      let v: T? = BSlaw(vs).emit()
       map[k] = v
     }
     return map
@@ -377,6 +377,36 @@ extension BSlaw {
       return v
     } else if self.isMap() {
       let v: [String: Any] = self.emitMap()!
+      return v
+    } else if slaw_is_float32_array(self.slaw) {
+      let v: [Float32] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_float64_array(self.slaw) {
+      let v: [Float64] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_int16_array(self.slaw) {
+      let v: [Int16] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_int32_array(self.slaw) {
+      let v: [Int32] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_int64_array(self.slaw) {
+      let v: [Int64] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_unt16_array(self.slaw) {
+      let v: [UInt16] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_unt32_array(self.slaw) {
+      let v: [UInt32] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_unt64_array(self.slaw) {
+      let v: [UInt64] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_unt8_array(self.slaw) {
+      let v: [UInt8] = self.emitNumericArray()!
+      return v
+    } else if slaw_is_int8_array(self.slaw) {
+      let v: [Int8] = self.emitNumericArray()!
       return v
     } else if slaw_is_nil(self.slaw) {
       return nil
